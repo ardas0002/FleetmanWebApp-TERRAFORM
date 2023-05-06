@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fleetman-position-tracker
+spec:
+  selector:
+    matchLabels:
+      app: tracker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tracker
+    spec:
+      containers:
+      - name: tracker
+        image: richardchesterwood/k8s-fleetman-position-tracker:release3
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production-microservice"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetman-position-tracker
+spec:
+  selector:
+      app: tracker
+  ports:
+    - name: http
+      port: 8080
+  type: ClusterIP
